@@ -3,4 +3,10 @@
 set user-class Tinkerbell
 echo Welcome to Neverland!
 
+# Wait up to ten seconds for an interface to have link
+iflinkwait --timeout 10000
+
 autoboot
+
+# If we get here we failed to boot. Provide a 2 second opportunity to drop to a shell
+prompt --key 0x02 --timeout 2000 Press Ctrl-B for the iPXE command line... && shell

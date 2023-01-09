@@ -1,0 +1,3 @@
+#!ipxe
+
+chain --replace SERVER/undionly.kpxe SERVER/boot.ipxe

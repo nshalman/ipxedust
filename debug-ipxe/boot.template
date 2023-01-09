@@ -1,0 +1,6 @@
+#!ipxe
+
+set syslog IP
+chain https://boot.netboot.xyz
+# drop to shell if/when that fails
+shell

@@ -1,0 +1,13 @@
+version: "3"
+services:
+  rsyslog:
+    image: rsyslog/syslog_appliance_alpine
+    network_mode: host
+    volumes:
+      - ./syslogs:/logs
+      - ./syslog-config:/config
+  web-server:
+    image: nginx:alpine
+    network_mode: host
+    volumes:
+      - ./web:/usr/share/nginx/html/

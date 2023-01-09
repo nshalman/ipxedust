@@ -1,1 +1,2 @@
-#define	CONSOLE_SYSLOG
+#define CONSOLE_SYSLOG   CONSOLE_USAGE_ALL
+#define LOG_LEVEL        LOG_ALL

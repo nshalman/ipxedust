@@ -10,7 +10,7 @@ help: ## show this help message
 include lint.mk
 
 .PHONY: binary
-binary: binary/ipxe.efi binary/snp.efi binary/undionly.kpxe ## build all upstream ipxe binaries
+binary: binary/ipxe.efi binary/undionly.kpxe ## build all upstream ipxe binaries
 
 # ipxe_sha_or_tag := v1.21.1 # could not get this tag to build ipxe.efi
 # https://github.com/ipxe/ipxe/tree/2265a65191d76ce367913a61c97752ab88ab1a59

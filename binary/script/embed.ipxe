@@ -1,23 +1,6 @@
 #!ipxe
   
 set user-class Tinkerbell
-echo Welcome to Neverland!
-
-# Allow the operator to drop to a shell
-prompt --key 0x02 --timeout 2000 Press Ctrl-B for the iPXE command line... && shell ||
-
-# This is possible because the DHCP options from the original vendor PXE DHCP request
-# are available to chainloaded iPXE binaries. See https://github.com/ipxe/ipxe/issues/188
-set vlan-id ${43.116:string}
-isset ${vlan-id} && goto boot-with-vlan ||
-
-:autoboot
-autoboot
-
-# ${ifname} will give us the interface name (net0, for example) that was used by the original vendor
-# PXE DHCP request. We then use that to create a VLAN interface.
-vcreate --tag ${vlan-id} ${ifname} || goto autoboot
-echo Created VLAN network interface ${ifname}-${vlan-id}
-echo Booting from ${ifname}-${vlan-id}...
-
-autoboot ${ifname}-${vlan-id}
+echo Welcome to Debug iPXE
+dhcp
+shell

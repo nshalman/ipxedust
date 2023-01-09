@@ -49,6 +49,7 @@ function copy_common_files() {
     cp -a binary/script/ipxe-customizations/common.h "${ipxe_dir}"/src/config/local/
     cp -a binary/script/ipxe-customizations/console.h "${ipxe_dir}"/src/config/local/
     cp -a binary/script/ipxe-customizations/crypto.h "${ipxe_dir}"/src/config/local/
+    sed -e '/LOG_LEVEL/{d}' -i "${ipxe_dir}/src/config/console.h"
 }
 
 # copy_custom_files will copy in any custom header files based on a requested ipxe binary.
@@ -66,9 +67,6 @@ function copy_custom_files() {
     bin-x86_64-efi/ipxe.efi)
     	cp binary/script/ipxe-customizations/general.efi.h "${ipxe_dir}"/src/config/local/general.h
         cp binary/script/ipxe-customizations/isa.h "${ipxe_dir}"/src/config/local/isa.h
-    	;;
-    bin-arm64-efi/snp.efi)
-    	cp binary/script/ipxe-customizations/general.efi.h "${ipxe_dir}"/src/config/local/general.h
     	;;
     *) echo "unknown binary: ${ipxe_bin}" >&2 && exit 1 ;;
     esac
@@ -141,13 +139,9 @@ function main() {
 
     # check for prerequisites
     hasType
-    hasNixShell
+    #hasNixShell
     hasUname
-    local OS_TEST
-    OS_TEST=$(uname | tr '[:upper:]' '[:lower:]')
-    if [[ "${OS_TEST}" != *"linux"* ]]; then
-        hasDocker
-    fi
+    hasDocker
 
     local ipxe_src=upstream-${ipxe_sha_or_tag}
     local build_dir=${ipxe_src}-${final_path##*/}
@@ -160,4 +154,4 @@ function main() {
     cp -a "${build_dir}/src/${bin_path}" "${final_path}"
 }
 
-main "$1" "$2" "$3" "$4" "$5" "${6:-}" "${7:-binary/script/embed.ipxe}"
+main "$1" "$2" "$3" "$4" "$5" "DEBUG=tls,x509:3,certstore,privkey" "${7:-binary/script/embed.ipxe}"

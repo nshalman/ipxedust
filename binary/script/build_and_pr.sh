@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -uxo pipefail
 
@@ -14,14 +14,12 @@ tracked_files=(
     "./script/embed.ipxe"
     "./script/ipxe.commit"
     "./ipxe.efi"
-    "./snp.efi"
     "./undionly.kpxe"
 )
 
 # binaries defines the files that will be built if any tracked_files changes are detected.
 binaries=(
     "script/sha512sum.txt"
-    "snp.efi"
     "ipxe.efi"
     "undionly.kpxe"
 )
@@ -112,7 +110,7 @@ function create_branch() {
 # shellcheck disable=SC2086
 # commit changes to git
 function commit_changes() {
-    local files="${1:-script/sha512sum.txt snp.efi ipxe.efi undionly.kpxe}"
+    local files="${1:-script/sha512sum.txt ipxe.efi undionly.kpxe}"
     local message="${2:-Updated iPXE}"
 
     # commit changes
@@ -170,21 +168,7 @@ function clean_up() {
 }
 
 function main() {
-    local sha_file="$1"
-
-    check_github_token
-    changes_detected "${sha_file}"
-    branch="update_iPXE_$(date +"%Y_%m_%d_%H_%M_%S")"
-    create_branch "${branch}"
-    clean_iPXE
     build_iPXE
-    create_checksums "${sha_file}"
-    configure_git "${git_email}" "${git_name}"
-    # shellcheck disable=SC2068,SC2145
-    commit_changes "$(printf "%s " "${binaries[@]}"|xargs)" "Updated iPXE binaries"
-    push_changes "${branch}" "${repo}" "${git_name}" "${GITHUB_TOKEN}"
-    create_pull_request "${branch}" "main" "Update iPXE binaries" "Automated iPXE binaries update."
-    clean_up
 }
 
 main "${1:-./script/sha512sum.txt}"

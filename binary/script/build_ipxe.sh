@@ -17,11 +17,11 @@ function build_ipxe() {
     if [ "${run_in_docker}" = true ]; then
         if [ ! -f "${ipxe_dir}/src/${ipxe_bin}" ]; then
             echo "running in docker"
-            docker run -it --rm -v "${PWD}":/code -w /code nixos/nix nix-shell "${nix_shell}" --run "${env_opts} make -C ${ipxe_dir}/src EMBED=${embed_path} ${ipxe_bin}"
+            docker run -it --rm -v "${PWD}":/code -w /code nixos/nix nix-shell "${nix_shell}" --run "${env_opts} make -C ${ipxe_dir}/src ${ipxe_bin}"
         fi
     else
         echo "running locally"
-        nix-shell "${nix_shell}" --run "${env_opts} make -C ${ipxe_dir}/src EMBED=${embed_path} ${ipxe_bin}"
+        nix-shell "${nix_shell}" --run "${env_opts} make -C ${ipxe_dir}/src ${ipxe_bin}"
     fi
 }
 

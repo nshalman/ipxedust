@@ -1,0 +1,13 @@
+#!ipxe
+
+iseq ${platform} efi && goto is_efi || goto not_efi
+
+:is_efi
+echo server is UEFI
+chain https://raw.githubusercontent.com/ibrokethecloud/harvester-equinix-terraform/7e5786d2252e27b9ee39138066001303be2c7876/ipxe/ipxe-1.2.0-rc5
+
+:not_efi
+echo server is legacy BIOS
+kernel https://github.com/nshalman/ipxedust/raw/69f06edb241d4f06a8af6958b8f3978e54fadac1/binary/ipxe.lkrn
+initrd https://raw.githubusercontent.com/ibrokethecloud/harvester-equinix-terraform/7e5786d2252e27b9ee39138066001303be2c7876/ipxe/ipxe-1.2.0-rc5
+boot

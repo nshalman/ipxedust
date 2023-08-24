@@ -39,6 +39,9 @@ binary/snp.efi: $(ipxe_readme) ## build snp.efi
 binary/ipxe.iso: $(ipxe_readme) ## build ipxe.iso
 	+${IPXE_BUILD_SCRIPT} bin-x86_64-efi/ipxe.iso "$(ipxe_sha_or_tag)" $(ipxe_build_in_docker) $@  "${IPXE_NIX_SHELL}"
 
+binary/ipxe.lkrn: $(ipxe_readme) ## build ipxe.lkrn
+	+${IPXE_BUILD_SCRIPT} bin/ipxe.lkrn "$(ipxe_sha_or_tag)" $(ipxe_build_in_docker) $@  "${IPXE_NIX_SHELL}"
+
 .PHONY: binary/clean
 binary/clean: ## clean ipxe binaries, upstream ipxe source code directory, and ipxe source tarball
 	rm -rf binary/ipxe.efi binary/snp.efi binary/undionly.kpxe binary/ipxe.iso

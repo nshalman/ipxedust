@@ -1,34 +1,30 @@
 #!ipxe
+set version v1.2.0-rc5
+set base https://github.com/harvester/harvester/releases/download/${version}
+set harvesterreleasebase https://releases.rancher.com/harvester/${version}
+dhcp
+iflinkwait -t 5000
+goto ${ifname}
+:net0
+set address ${net0/mac}
+set secondaryaddress ${net1/mac}
+goto setupboot
+:net1
+set address ${net1/mac}
+set secondaryaddress ${net0/mac}
+goto setupboot
+:net2
+set address ${net2/mac}
+set secondaryaddress ${net3/mac}
+goto setupboot
+:net3
+set address ${net3/mac}
+set secondaryaddress ${net2/mac}
+goto setupboot
 
-set user-class Tinkerbell
-echo Welcome to Neverland!
-
-# Allow the operator to drop to a shell
-prompt --key 0x02 --timeout 2000 Press Ctrl-B for the iPXE command line... && shell ||
-
-# Random string to enable binary patching
-#a8b7e61f1075c37a793f2f92cee89f7bba00c4a8d7842ce3d40b5889032d8881
-#ddd16a4fc4926ecefdfb6941e33c44ed3647133638f5e84021ea44d3152e7f97
-
-# This is possible because the DHCP options from the original vendor PXE DHCP request
-# are available to chainloaded iPXE binaries. See https://github.com/ipxe/ipxe/issues/188
-set vlan-id ${43.116:string}
-isset ${vlan-id} && goto boot-with-vlan ||
-
-:autoboot
-autoboot
-
-:boot-with-vlan
-set idx:int32 0
-# Find the interface that is configured with an IP, this will be the iPXE auto created vlan interface.
-:loop isset ${net${idx}-${vlan-id}/ip} && goto loop_done ||
-  iseq ${idx} 50 && goto error ||
-  inc idx && goto loop
-
-:loop_done
-echo Booting from net${idx}-${vlan-id}...
-autoboot net${idx}-${vlan-id}
-
-:error
-echo Failed to find the vlan interface
-shell
+:setupboot
+echo "view interface stats"
+isset ${secondaryaddress} && set extraargs harvester.install.management_interface.interfaces="hwAddr:${secondaryaddress/mac}"
+kernel ${base}/harvester-${version}-vmlinuz-amd64 initrd=harvester-${version}-initrd-amd64 ip=dhcp net.ifnames=1 rd.cos.disable rd.noverifyssl root=live:${harvesterreleasebase}/harvester-${version}-rootfs-amd64.squashfs harvester.install.management_interface.interfaces="hwAddr:${address}" harvester.install.management_interface.interfaces="hwAddr:${net2/mac}" harvester.install.management_interface.method=dhcp harvester.install.management_interface.bond_options.mode=balance-tlb harvester.install.management_interface.bond_options.miimon=100 console=ttyS1,115200 harvester.install.automatic=true boot_cmd="echo include_ping_test=yes >> /etc/conf.d/net-online" harvester.install.config_url=https://metadata.platformequinix.com/userdata ${extraargs}
+initrd ${base}/harvester-${version}-initrd-amd64
+boot

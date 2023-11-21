@@ -216,6 +216,8 @@ func (c *Server) serveTFTP(ctx context.Context, conn net.PacketConn) error {
 	ts := tftp.NewServer(h.HandleRead, h.HandleWrite)
 	ts.SetTimeout(c.TFTP.Timeout)
 	ts.SetBlockSize(c.TFTP.BlockSize)
+	ts.SetAnticipate(500)
+	ts.SetBackoff( func (int) time.Duration { return time.Duration(100) * time.Millisecond })
 	if c.EnableTFTPSinglePort {
 		ts.EnableSinglePort()
 	}

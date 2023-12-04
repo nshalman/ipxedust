@@ -1,0 +1,18 @@
+#!ipxe
+
+set user-class Testing
+echo Welcome to iPXE Stress Test!
+
+# Allow the operator to drop to a shell
+prompt --key 0x02 --timeout 5000 Press Ctrl-B for the iPXE command line... && shell ||
+
+dhcp
+
+:loop
+
+# Allow the operator to drop to a shell
+prompt --key 0x02 --timeout 5000 Press Ctrl-B for the iPXE command line... && shell ||
+
+imgfetch https://artifacts.platformequinix.com/images/ubuntu/22_04/fe3f18eead9ab1bf6a333294198cdb6cdf918290/image.tar.gz
+imgfree
+goto loop

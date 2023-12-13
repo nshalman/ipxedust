@@ -34,7 +34,7 @@ binaries=(
 
 git_email="github-actions[bot]@users.noreply.github.com"
 git_name="github-actions[bot]"
-repo="tinkerbell/ipxedust"
+repo="nshalman/ipxedust" #XXX DO NOT UPSTREAM
 
 # check for the GITHUB_TOKEN environment variable
 function check_github_token() {
@@ -137,7 +137,7 @@ function commit_changes() {
 # push changes to origin
 function push_changes() {
     local branch="${1}"
-    local repository="${2:-tinkerbell/ipxedust}"
+    local repository="${2:-nshalman/ipxedust}" #XXX
     local git_actor="${3:-github-actions[bot]}"
     local token="${4:-${GITHUB_TOKEN}}"
 
@@ -183,6 +183,7 @@ function main() {
 
     check_github_token
     changes_detected "${sha_file}"
+    head_branch="$(git rev-parse --abbrev-ref HEAD)"
     branch="update_iPXE_$(date +"%Y_%m_%d_%H_%M_%S")"
     create_branch "${branch}"
     clean_iPXE
@@ -192,7 +193,7 @@ function main() {
     # shellcheck disable=SC2068,SC2145
     commit_changes "$(printf "%s " "${binaries[@]}"|xargs)" "Updated iPXE binaries"
     push_changes "${branch}" "${repo}" "${git_name}" "${GITHUB_TOKEN}"
-    create_pull_request "${branch}" "main" "Update iPXE binaries" "Automated iPXE binaries update."
+    create_pull_request "${branch}" "${head_branch}" "Update iPXE binaries" "Automated iPXE binaries update."
     clean_up
 }
 

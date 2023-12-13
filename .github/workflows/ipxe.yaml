@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - equinix-fixes
 
 jobs:
   build-ipxe:
@@ -16,5 +17,5 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Build iPXE
         env:
-          GITHUB_TOKEN: ${{ secrets.Token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: (cd binary/; MAKEFLAGS=-j$(nproc) ./script/build_and_pr.sh)

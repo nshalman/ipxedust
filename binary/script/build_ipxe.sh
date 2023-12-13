@@ -8,6 +8,9 @@ set -eux
 CERT=ca.pem,isrgrootx1.pem,lets-encrypt-r3.pem
 TRUST=ca.pem,isrgrootx1.pem,lets-encrypt-r3.pem
 
+#XXX Workaround for netboot.xyz
+VERSION=2.x
+
 # build_ipxe will run the make target in the upstream ipxe source
 # that will build an ipxe binary.
 function build_ipxe() {
@@ -17,9 +20,9 @@ function build_ipxe() {
     local embed_path="$4"
 
     if [ -z "${env_opts}" ]; then
-        make -C "${ipxe_dir}"/src EMBED="${embed_path}" CERT="${CERT}" TRUST="${TRUST}" "${ipxe_bin}"
+        make -C "${ipxe_dir}"/src EMBED="${embed_path}" CERT="${CERT}" TRUST="${TRUST}" VERSION=${VERSION} "${ipxe_bin}"
     else
-        make -C "${ipxe_dir}"/src "${env_opts}" EMBED="${embed_path}" CERT="${CERT}" TRUST="${TRUST}" "${ipxe_bin}"
+        make -C "${ipxe_dir}"/src "${env_opts}" EMBED="${embed_path}" CERT="${CERT}" TRUST="${TRUST}" VERSION=${VERSION} "${ipxe_bin}"
     fi
 }
 

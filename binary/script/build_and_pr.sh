@@ -196,7 +196,7 @@ function main() {
     # shellcheck disable=SC2068,SC2145
     commit_changes "$(printf "%s " "${binaries[@]}"|xargs)" "Updated iPXE binaries"
     push_changes "${branch}" "${repo}" "${git_name}" "${GITHUB_TOKEN}"
-    create_pull_request "${branch}" "equinix-fixes" "Update iPXE binaries" "Automated iPXE binaries update."
+    create_pull_request "${branch}" "rhel-workaround" "Update iPXE binaries" "Automated iPXE binaries update."
     clean_up
 }
 

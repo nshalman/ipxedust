@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - equinix-fixes
+      - rhel-workaround
 
 jobs:
   build-ipxe:

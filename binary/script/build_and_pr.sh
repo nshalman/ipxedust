@@ -73,7 +73,7 @@ function build_iPXE() {
     # build iPXE
     echo "Building iPXE"
     top_level_dir="$(git rev-parse --show-toplevel)"
-    if ! (cd "${top_level_dir}"; nix-shell "${top_level_dir}/binary/script/shell.nix" --run 'make binary'); then
+    if ! (cd "${top_level_dir}"; nix-shell "${top_level_dir}/binary/script/shell.nix" --run 'make VERSION=2.0+ binary'); then
         echo "Failed to build iPXE" 1>&2
         exit 1
     fi
@@ -195,7 +195,7 @@ function main() {
     # shellcheck disable=SC2068,SC2145
     commit_changes "$(printf "%s " "${binaries[@]}"|xargs)" "Updated iPXE binaries"
     push_changes "${branch}" "${repo}" "${git_name}" "${GITHUB_TOKEN}"
-    create_pull_request "${branch}" "equinix-fixes" "Update iPXE binaries" "Automated iPXE binaries update."
+    create_pull_request "${branch}" "for-customer" "Update iPXE binaries" "Automated iPXE binaries update."
     clean_up
 }
 

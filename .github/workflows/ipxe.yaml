@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - equinix-fixes
+      - for-customer
 
 jobs:
   build-ipxe:

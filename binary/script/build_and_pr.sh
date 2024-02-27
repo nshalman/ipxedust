@@ -184,8 +184,8 @@ function clean_up() {
 function main() {
     local sha_file="$1"
 
-    check_github_token
     changes_detected "${sha_file}"
+    check_github_token
     branch="update_iPXE_$(date +"%Y_%m_%d_%H_%M_%S")"
     create_branch "${branch}"
     clean_iPXE
